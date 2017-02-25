@@ -64,37 +64,116 @@ app.post('/upload', function(req, res, next) {
 										var WHITE = [255, 255, 255]; // B, G, R
 
 										var width = im.width()
-										var  height = im.height()
-										  if (width < 1 || height < 1) throw new Error('Image has no size');
+										var height = im.height()
+										
+										if (width < 1 || height < 1) throw new Error('Image has no size');
 
-										  var out = new cv.Matrix(height, width);
-										  im.convertGrayscale();
-										  im_canny = im.copy();
-										  im_canny.canny(lowThresh, highThresh);
-										  im_canny.dilate(nIters);
+									  	var out = new cv.Matrix(height, width);
+										im.convertGrayscale();
+										im_canny = im.copy();
+										im_canny.canny(lowThresh, highThresh);
+										im_canny.dilate(nIters);
 
-										  contours = im_canny.findContours();
+										contours = im_canny.findContours();
 
-										  for (i = 0; i < contours.size(); i++) {
+										for (i = 0; i < contours.size(); i++) {
 
-										    if (contours.area(i) < minArea) continue;
+											if (contours.area(i) < minArea) continue;
 
-										    var arcLength = contours.arcLength(i, true);
-										    contours.approxPolyDP(i, 0.01 * arcLength, true);
+											var arcLength = contours.arcLength(i, true);
+											contours.approxPolyDP(i, 0.01 * arcLength, true);
+											/*
+											// Triangle detected
+											if (contours.cornerCount(i) === 3) {
+												out.drawContour(contours, i, GREEN);
+												console.log("ILLUMINATI");
+											}
+											*/
 
-										    switch(contours.cornerCount(i)) {
-										      case 3:
-										        out.drawContour(contours, i, GREEN);
-										        break;
-										      case 4:
-										        out.drawContour(contours, i, RED);
-										        break;
-										      default:
-										        out.drawContour(contours, i, WHITE);
-										    }
+											
+											switch(contours.cornerCount(i)) {
+												case 3:
+													out.drawContour(contours, i, GREEN);
+													break;
+												case 4:
+													out.drawContour(contours, i, RED);
+													break;
+												default:
+													out.drawContour(contours, i, WHITE);
+											}
+												
 										}
 
+										
 										out.save(path.join(__dirname + '/uploads/out' + ext));
+										// ONE MOAR TIME
+										cv.readImage(path.join(__dirname + '/uploads/out' + ext), function(err, cImg) {
+											if (err) throw err;
+
+											var out2 = new cv.Matrix(height, width);
+											cImg.convertGrayscale();
+											cImg_canny = cImg.copy();
+											cImg_canny.canny(lowThresh, highThresh);
+											cImg_canny.dilate(nIters);
+
+											var lines = cImg_canny.findContours();
+
+											for (var j = 0; j < lines.size(); j++) {
+												if (lines.area(j) < minArea) continue;
+
+												var aL = lines.arcLength(j, true);
+												lines.approxPolyDP(j, 0.01 * aL, true);
+
+												// Triangle detected
+												if (lines.cornerCount(j) === 3) {
+													out2.drawContour(lines, j, GREEN);
+													console.log("ILLUMINATI");
+												}
+
+											}
+
+											out2.save(path.join(__dirname + '/uploads/out2' + ext));
+
+
+										});
+
+										/*
+										out.save(path.join(__dirname + '/uploads/out' + ext)).then(function() {
+											
+											cv.readImage(path.join(__dirname + '/uploads/out' + ext), function(err, cImg) {
+												if (err) throw err;
+
+												var out2 = new cv.Matrix(height, width);
+												cImg.convertGrayscale();
+												cImg_canny = cImg.copy();
+												cImg_canny.canny(lowThresh, highThresh);
+												cImg_canny.dilate(nIters);
+
+												var lines = cImg_canny.findContours();
+
+												for (var j = 0; j < lines.size(); j++) {
+													if (lines.area(j) < minArea) continue;
+
+													var aL = lines.arcLength(j, true);
+													lines.approxPolyDP(j, 0.01 * aL, true);
+
+													// Triangle detected
+													if (lines.cornerCount(j) === 3) {
+														out2.drawContour(lines, j, GREEN);
+														console.log("ILLUMINATI");
+													}
+
+												}
+
+												out2.save(path.join(__dirname + '/uploads/out2' + ext));
+
+
+											});
+										});*/
+										
+
+
+
 										console.log('yeee');
 
 										/*
