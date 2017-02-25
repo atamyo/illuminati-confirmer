@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Illuminati Confirmer</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	</head>
+	<body>
+		<div class="jumbotron text-center">
+			<div class="container">
+				<h1>Illuminati Confirmed???</h1>
+				<p id="prompt">Upload a picture to find The Illuminati.</p>
+				<p>
+				    <form action="/upload" method="post" enctype="multipart/form-data" class="form-inline">
+				        <div class="form-group">
+				            <label class="sr-only" for="userImg">Image upload</label>
+				            <input type="file" id="userImg" name="uploaded">
+				        </div>
+				        <button type="submit" class="btn btn-default">Upload</button>
+				    </form>
+				</p>
+			</div>
+		</div>
+	</body>
+</html>
